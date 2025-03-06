@@ -1,0 +1,9 @@
+<form [formGroup]="form">
+    <input type="file" 
+    (change)="onFileChange($event)"
+    accept="image/png">
+    <input type="text"
+        formControlName="comments"
+        placeholder="comments">
+    <button (click)="upload()">Upload</button>
+</form>

@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 
 import sg.edu.nus.iss.day36l.model.Post;
 import sg.edu.nus.iss.day36l.service.FileUploadService;
+import sg.edu.nus.iss.day36l.service.S3Service;
 
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -30,6 +31,9 @@ public class FileUploadController {
     @Autowired
     private FileUploadService fileUploadService;
 
+    @Autowired
+    private S3Service s3Service;
+
     @PostMapping(path="/api/upload",
     consumes = MediaType.MULTIPART_FORM_DATA_VALUE,
     produces = MediaType.APPLICATION_JSON_VALUE)
@@ -40,6 +44,8 @@ public class FileUploadController {
         try {
             postId = fileUploadService.uploadFile(file, comments);
             System.out.println("Post ID: " + postId);
+            String s3EndpointUrl = s3Service.upload(file, comments, postId);
+            System.out.println(s3EndpointUrl);
         } catch (SQLException | IOException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -50,7 +56,7 @@ public class FileUploadController {
         return ResponseEntity.ok().body(payload.toString());
     }
 
-    @GetMapping(path="/api/get-image/{post-id}")
+    @GetMapping(path="/api/get-image/{postId}")
     public ResponseEntity<String> getImage(@PathVariable String postId) 
     throws SQLException{
         Optional<Post> r = this.fileUploadService.getPostByID(postId);
