@@ -1,9 +1,21 @@
 <form [formGroup]="form">
-    <input type="file" 
-    (change)="onFileChange($event)"
-    accept="image/png">
-    <input type="text"
-        formControlName="comments"
-        placeholder="comments">
-    <button (click)="upload()">Upload</button>
+    <div>
+        <input type="file" 
+        (change)="onFileChange($event)"
+        accept="image/png">
+        <input type="text"
+            formControlName="comments"
+            placeholder="comments">
+        <button (click)="upload()">Upload</button>
+    </div>
+
+    <div>
+        <label for="city">Select a city:</label>
+        <select [(value)]="selectedCity" id="city">
+            <option *ngFor="let c of citiesList$ | async" [value]="c.code">
+                {{c.city_name}}
+            </option>
+        </select>
+    </div>
+    
 </form>

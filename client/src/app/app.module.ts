@@ -8,12 +8,16 @@ import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http'
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { UploadComponent } from './components/upload/upload.component';
 import { ViewImageComponent } from './components/view-image/view-image.component';
+import { CitiesComponent } from './components/cities/cities.component';
+import { GalleryComponent } from './components/gallery/gallery.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     UploadComponent,
-    ViewImageComponent
+    ViewImageComponent,
+    CitiesComponent,
+    GalleryComponent
   ],
   imports: [
     BrowserModule,

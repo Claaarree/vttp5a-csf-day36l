@@ -2,6 +2,9 @@ import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FileUploadService } from '../../services/file-upload.service';
+import { CityStore } from '../../store/city.store';
+import { Observable } from 'rxjs';
+import { City } from '../../model/city';
 
 @Component({
   selector: 'app-upload',
@@ -16,12 +19,24 @@ export class UploadComponent implements OnInit{
   private router = inject(Router);
   private fb = inject(FormBuilder)
   private fileUploadSvc = inject(FileUploadService)
+  private cityStore = inject(CityStore)
+
+  citiesList$!: Observable<City[]>;
+  selectedCity: string = '';
+  selectedCityName? : string
 
   ngOnInit(): void {
     this.createForm();
+    this.loadCities();
   }
 
   upload() {
+    console.log(this.selectedCity);
+    this.citiesList$.subscribe((cities) => {
+      const city = cities.find((city) => city.code === this.selectedCity);
+      console.log(city?.city_name);
+      this.selectedCityName = city?.city_name;
+    });
     console.log("dataUri: " + this.dataUri);
     if(!this.dataUri) {
       return;
@@ -68,5 +83,10 @@ export class UploadComponent implements OnInit{
       ia[i] = byteString.charCodeAt(i);
     }
     return new Blob([ia], {type: mimeType});
+  }
+
+  loadCities() {
+    this.citiesList$ = this.cityStore.cities$;
+    this.cityStore.loadCities();
   }
 }
